@@ -1,0 +1,42 @@
+#Start your starcluster
+#Once up, use this script or do it manually:
+
+#Script for uploading tar files to the master node
+############################################################################
+IP='YOUR_MASTER_IP_HERE'
+scp -i ~/.ssh/test1.pem ./NPB.tar.gz mac@$IP:/home/mac/
+scp -i ~/.ssh/test1.pem ./IOR.tgz mac@$IP:/home/mac/
+############################################################################
+#END Script
+
+#SSH into your master node
+
+cd /home/mac/
+tar -xf NPB3.3.1.tar.gz
+tar -xf IOR.tgz
+
+cp NPB3.3.1.tar.gz NPB.tar.gz
+cp IOR.XXXX IOR.tgz
+
+cd ./NPB3.3.1/NPB3.3-MPI/config
+cp ./NAS.samples/make.def_sun_mpich ./make.def
+cd ..
+
+make EP NPROCS=1 CLASS=A
+make EP NPROCS=2 CLASS=A
+make EP NPROCS=4 CLASS=A
+make EP NPROCS=6 CLASS=A
+make EP NPROCS=8 CLASS=A
+
+cd bin
+#upload all ep.A.x files in the bin folder to your github
+
+cd ~/home/youruser/IOR/src/C
+
+make
+
+#upload the created IOR binary to your github
+
+#Now, each time you set up star cluster, just clone your github folder
+
+cd ~home/youruser/yourgithubfolder
